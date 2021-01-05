@@ -39,7 +39,7 @@ namespace CursoMVC.Controllers
                 return NotFound();
             }
 
-            // Busca a primeira categoria com id fornecido
+            // Busca a primeira categoria com id fornecido            
             var categoria = await _context.Categorias
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (categoria == null)

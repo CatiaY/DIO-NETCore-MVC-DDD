@@ -30,7 +30,10 @@ namespace CursoMVC_DDD.Domain.ValueTypes
                 return AdicionarErro("Informe uma descrição válida.");
 
             if (_descricao.Length < 5)
-                return AdicionarErro("A descrição deve ter mais de 5 caracteres");
+                return AdicionarErro("A descrição deve ter pelo menos 5 caracteres");
+
+            if (_descricao.Length > 100)
+                return AdicionarErro("A descrição deve ter no máximo 100 caracteres");
 
             return true;
         }

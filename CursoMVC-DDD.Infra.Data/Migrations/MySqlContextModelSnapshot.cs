@@ -50,8 +50,14 @@ namespace CursoMVC_DDD.Infra.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Descrição");
 
+                    b.Property<bool>("Disponivel")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("dec");
 
                     b.HasKey("Id");
 

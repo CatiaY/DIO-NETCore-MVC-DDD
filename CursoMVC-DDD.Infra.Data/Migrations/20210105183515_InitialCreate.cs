@@ -27,6 +27,8 @@ namespace CursoMVC_DDD.Infra.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descrição = table.Column<string>(type: "varchar(100)", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
+                    Valor = table.Column<decimal>(type: "dec", nullable: false),
+                    Disponivel = table.Column<bool>(type: "bit", nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

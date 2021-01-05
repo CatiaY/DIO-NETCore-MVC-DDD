@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CursoMVC_DDD.Infra.Data.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20210105125332_InitialCreate")]
+    [Migration("20210105183515_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,8 +52,14 @@ namespace CursoMVC_DDD.Infra.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Descrição");
 
+                    b.Property<bool>("Disponivel")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("dec");
 
                     b.HasKey("Id");
 

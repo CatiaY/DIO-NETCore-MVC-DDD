@@ -25,6 +25,13 @@ namespace CursoMVC_DDD.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnType("int");
 
+            builder.Property(p => p.Valor)
+                .IsRequired()
+                .HasColumnType("dec");
+
+            builder.Property(p => p.Disponivel)
+                .IsRequired();                
+
             // Chave estrangeira para a Categoria
             builder.HasOne(p => p.Categoria)
                 .WithMany().HasForeignKey(fk => fk.CategoriaId);

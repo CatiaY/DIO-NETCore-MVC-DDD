@@ -1,3 +1,5 @@
+using AutoMapper;
+using CursoMVC_DDD.Application.AutoMapper;
 using CursoMVC_DDD.Infra.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +29,8 @@ namespace CursoMVC_DDD.Application
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 //options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CursoMVC-DDD;Integrated Security=True");                
             });
+
+            services.AddAutoMapper(typeof(CategoriaProfile), typeof(ProdutoProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
