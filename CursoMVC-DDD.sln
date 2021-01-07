@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B061D096-CC99-4C49-B25E-C96915812527}"
 	ProjectSection(SolutionItems) = preProject
+		ReadMe\Categorias.JPG = ReadMe\Categorias.JPG
+		ReadMe\Produtos.JPG = ReadMe\Produtos.JPG
 		README.md = README.md
 	EndProjectSection
 EndProject
