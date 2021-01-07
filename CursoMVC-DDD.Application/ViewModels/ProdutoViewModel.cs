@@ -1,6 +1,4 @@
-﻿using CursoMVC_DDD.Domain.Entities;
-using CursoMVC_DDD.Domain.ValueTypes;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace CursoMVC_DDD.Application.ViewModels
@@ -27,7 +25,8 @@ namespace CursoMVC_DDD.Application.ViewModels
 
         [Display(Name = "Disponível")]
         public bool Disponivel { get; set; }
-
+                
+        [Display(Name = "Categoria")]
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         public int CategoriaId { get; set; }
         public virtual CategoriaViewModel Categoria { get; set; }

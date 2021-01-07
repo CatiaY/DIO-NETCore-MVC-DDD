@@ -10,7 +10,7 @@ namespace CursoMVC_DDD.Domain.Interfaces
 
         IEnumerable<TEntity> GetAll();
 
-        void Upddate(TEntity obj);
+        void Update(TEntity obj);
 
         void Delete(TEntity obj);        
     }

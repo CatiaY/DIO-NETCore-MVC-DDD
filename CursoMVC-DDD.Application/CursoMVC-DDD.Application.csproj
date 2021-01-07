@@ -19,7 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CursoMVC-DDD.Domain\CursoMVC-DDD.Domain.csproj" />
+    <ProjectReference Include="..\CursoMVC-DDD.Infra.CrossCutting\CursoMVC-DDD.Infra.CrossCutting.csproj" />
     <ProjectReference Include="..\CursoMVC-DDD.Infra.Data\CursoMVC-DDD.Infra.Data.csproj" />
+    <ProjectReference Include="..\CursoMVC-DDD.Service\CursoMVC-DDD.Service.csproj" />
   </ItemGroup>
 
 </Project>

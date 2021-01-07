@@ -1,9 +1,5 @@
 ﻿using CursoMVC_DDD.Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CursoMVC_DDD.Domain.Interfaces.Services
 {
@@ -11,6 +7,6 @@ namespace CursoMVC_DDD.Domain.Interfaces.Services
     {
         IEnumerable<Produto> BuscarPorDescricao(string descricao);
 
-        IEnumerable<Produto> BuscarPorCategoria(int idCategoria);
+        IEnumerable<Produto> BuscarPorCategoria(int idCategoria);        
     }
 }

@@ -1,46 +1,34 @@
 ﻿using AutoMapper;
 using CursoMVC_DDD.Application.ViewModels;
 using CursoMVC_DDD.Domain.Entities;
-using CursoMVC_DDD.Infra.Data.Context;
-using CursoMVC_DDD.Infra.Data.Repositories;
-using Microsoft.AspNetCore.Http;
+using CursoMVC_DDD.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CursoMVC_DDD.Application.Controllers
-{    
+{
     public class CategoriaController : Controller
-    {
-        /* REMOVER O CONTEXT!! ---------------------------------------------------------------*/
-        private readonly MySqlContext Db;
-        private readonly CategoriaRepository _categoriaRepository;  
+    {   
+        private readonly ICategoriaService _categoriaService;  
         private readonly IMapper _mapper;
 
-        public CategoriaController(MySqlContext context, IMapper mapper)
+        public CategoriaController(ICategoriaService service, IMapper mapper)
         {
-            Db = context;
             _mapper = mapper;
-            _categoriaRepository = new CategoriaRepository(Db);
-    }
-        
+            _categoriaService = service;
+        }
 
+        //--------------------------------------------------------------------------
         // GET: CategoriaController
         public ActionResult Index()
-        {
-            var lista = _categoriaRepository.GetAll();
-            var categoriaViewModel = _mapper.Map<IEnumerable<Categoria>, IEnumerable<CategoriaViewModel>>(lista);            
+        {            
+            var categoriaViewModel = _mapper.Map<IEnumerable<Categoria>, IEnumerable<CategoriaViewModel>>(_categoriaService.GetAll());            
             return View(categoriaViewModel);            
         }
 
-        // GET: CategoriaController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: CategoriaController/Create
-        public ActionResult Create()
+        //--------------------------------------------------------------------------
+        // GET: Categorias/Create
+        public IActionResult Create()
         {
             return View();
         }
@@ -48,58 +36,107 @@ namespace CursoMVC_DDD.Application.Controllers
         // POST: CategoriaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoriaViewModel categoria)
+        public ActionResult Create(CategoriaViewModel categoriaViewModel)
         {
             if (ModelState.IsValid)
             {
-                var categoriaDomain = _mapper.Map<CategoriaViewModel, Categoria>(categoria);
-                _categoriaRepository.Add(categoriaDomain);
-                
+                var categoriaDomain = ViewModelToEntity(categoriaViewModel);
+                _categoriaService.Add(categoriaDomain);
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(categoria);
+
+            return View(categoriaViewModel);
         }
 
-        // GET: CategoriaController/Edit/5
-        public ActionResult Edit(int id)
+        //--------------------------------------------------------------------------
+        // GET: CategoriaController/Details/5
+        public ActionResult Details(int? id)
         {
-            return View();
+            return ExibirViewModel(id);
+        }
+                
+
+        //--------------------------------------------------------------------------
+        // GET: CategoriaController/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            return ExibirViewModel(id);            
         }
 
-        // POST: CategoriaController/Edit/5
+        // POST: Categorias/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, CategoriaViewModel categoriaViewModel)
         {
-            try
+            if (id != categoriaViewModel.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var categoriaDomain = ViewModelToEntity(categoriaViewModel);
+                _categoriaService.Update(categoriaDomain);
+             
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(categoriaViewModel);
         }
 
+        //--------------------------------------------------------------------------
         // GET: CategoriaController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            return ExibirViewModel(id);            
         }
 
         // POST: CategoriaController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, CategoriaViewModel categoriaViewModel)
         {
-            try
+            if (id != categoriaViewModel.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+                        
+            _categoriaService.Delete(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        //--------------------------------------------------------------------------                
+        private ActionResult ExibirViewModel(int? id)
+        {
+            if (id == null)
             {
-                return View();
+                return NotFound();
             }
+                        
+            var categoriaDomain = _categoriaService.GetById((int)id);
+
+            if (categoriaDomain == null)
+            {
+                return NotFound();
+            }
+
+            var categoriaViewModel = EntityToViewModel(categoriaDomain);
+            return View(categoriaViewModel);
+        }
+
+        private Categoria ViewModelToEntity(CategoriaViewModel categoriaViewModel)
+        {
+            return _mapper.Map<CategoriaViewModel, Categoria>(categoriaViewModel);
+        }
+
+        private CategoriaViewModel EntityToViewModel(Categoria categoriaEntity)
+        {
+            return _mapper.Map<Categoria, CategoriaViewModel>(categoriaEntity);
         }
     }
 }

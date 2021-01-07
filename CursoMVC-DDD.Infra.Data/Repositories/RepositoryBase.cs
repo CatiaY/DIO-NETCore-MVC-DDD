@@ -1,7 +1,6 @@
 ﻿using CursoMVC_DDD.Domain.Interfaces;
 using CursoMVC_DDD.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,17 +22,17 @@ namespace CursoMVC_DDD.Infra.Data.Repositories
             Db.SaveChanges();
         }
 
-        public TEntity GetById(int id)
+        public virtual TEntity GetById(int id)
         {
             return Db.Set<TEntity>().Find(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
             return Db.Set<TEntity>().ToList();
         }       
                 
-        public void Upddate(TEntity obj)
+        public void Update(TEntity obj)
         {
             Db.Entry(obj).State = EntityState.Modified;
             Db.SaveChanges();

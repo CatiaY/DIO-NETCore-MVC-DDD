@@ -1,9 +1,8 @@
 using AutoMapper;
 using CursoMVC_DDD.Application.AutoMapper;
-using CursoMVC_DDD.Infra.Data.Context;
+using CursoMVC_DDD.Infra.CrossCutting.InversionOfControl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,13 +23,10 @@ namespace CursoMVC_DDD.Application
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<MySqlContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                //options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CursoMVC-DDD;Integrated Security=True");                
-            });
-
+            services.AddMySqlDependency(Configuration);
             services.AddAutoMapper(typeof(CategoriaProfile), typeof(ProdutoProfile));
+            services.AddMySqlRepositoryDependence();
+            services.AddServiceDependency();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,13 @@ namespace CursoMVC_DDD.Application.AutoMapper
 {
     public class ProdutoProfile : Profile
     {
+        private readonly IMapper _mapper;
+
+        public ProdutoProfile(IMapper mapper)
+        {
+            _mapper = mapper;            
+        }
+
         public ProdutoProfile()
         {            
             CreateMap<Produto, ProdutoViewModel>()
@@ -14,7 +21,7 @@ namespace CursoMVC_DDD.Application.AutoMapper
 
             CreateMap<ProdutoViewModel, Produto>()
                 .ForMember(destination => destination.Descricao,
-                opt => opt.MapFrom(src => src.Descricao));
+                opt => opt.MapFrom(src => src.Descricao));                
         }        
     }
 }

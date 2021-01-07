@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using CursoMVC_DDD.Application.ViewModels;
 using CursoMVC_DDD.Domain.Entities;
-using CursoMVC_DDD.Infra.Data.Context;
-using CursoMVC_DDD.Infra.Data.Repositories;
-using Microsoft.AspNetCore.Http;
+using CursoMVC_DDD.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,92 +11,138 @@ namespace CursoMVC_DDD.Application.Controllers
 {
     public class ProdutoController : Controller
     {
-        private readonly MySqlContext Db;
-        private readonly ProdutoRepository _produtoRepository;
+        private readonly IProdutoService _produtoService;
+        private readonly ICategoriaService _categoriaService;
         private readonly IMapper _mapper;
 
-        public ProdutoController(MySqlContext context, IMapper mapper)
+        public ProdutoController(IProdutoService produtoService, ICategoriaService categoriaService, IMapper mapper)
         {
-            Db = context;
             _mapper = mapper;
-            _produtoRepository = new ProdutoRepository(context);
+            _produtoService = produtoService;
+            _categoriaService = categoriaService;
         }
 
+        //--------------------------------------------------------------------------
         // GET: ProdutoController
         public ActionResult Index()
         {
-            var lista = _produtoRepository.GetAll();
-            var produtoViewModel = _mapper.Map<IEnumerable<Produto>, IEnumerable<ProdutoViewModel>>(lista);
+            IEnumerable<Produto> produtos = _produtoService.GetAll();            
+            var produtoViewModel = _mapper.Map<IEnumerable<Produto>, IEnumerable<ProdutoViewModel>>(produtos);
             return View(produtoViewModel);
         }
 
-        // GET: ProdutoController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
+        //--------------------------------------------------------------------------
         // GET: ProdutoController/Create
         public ActionResult Create()
         {
+            var categorias = _categoriaService.GetAll();
+            ViewData["CategoriaId"] = new SelectList(categorias, "Id", "Descricao");
             return View();
         }
 
         // POST: ProdutoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProdutoViewModel produto)
+        public ActionResult Create(ProdutoViewModel produtoViewModel)
         {
             if (ModelState.IsValid)
             {
-                var produtoDomain = _mapper.Map<ProdutoViewModel, Produto>(produto);
-                _produtoRepository.Add(produtoDomain);
+                var produtoDomain = ViewModelToEntity(produtoViewModel);
+                _produtoService.Add(produtoDomain);
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(produto);
+
+            return View(produtoViewModel);
         }
 
+
+        //--------------------------------------------------------------------------
+        // GET: ProdutoController/Details/5
+        public ActionResult Details(int? id)
+        {
+            return ExibirViewModel(id);
+        }
+
+        //--------------------------------------------------------------------------
         // GET: ProdutoController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var categorias = _categoriaService.GetAll();
+            ViewData["CategoriaId"] = new SelectList(categorias, "Id", "Descricao");            
+            return ExibirViewModel(id);
         }
 
         // POST: ProdutoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+        public ActionResult Edit(int id, ProdutoViewModel produtoViewModel)
+        {            
+            if (id != produtoViewModel.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var produtoDomain = ViewModelToEntity(produtoViewModel);
+                _produtoService.Update(produtoDomain);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(produtoViewModel);
         }
 
+        //--------------------------------------------------------------------------
         // GET: ProdutoController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return ExibirViewModel(id);
         }
 
         // POST: ProdutoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, ProdutoViewModel produtoViewModel)
         {
-            try
+            if (id != produtoViewModel.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            _produtoService.Delete(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        //--------------------------------------------------------------------------        
+        public Produto ViewModelToEntity(ProdutoViewModel produtoViewModel)
+        {
+            return _mapper.Map<ProdutoViewModel, Produto>(produtoViewModel);
+        }
+
+        public ProdutoViewModel EntityToViewModel(Produto produtoEntity)
+        {
+            return _mapper.Map<Produto, ProdutoViewModel>(produtoEntity);
+        }
+
+        private ActionResult ExibirViewModel(int? id)
+        {
+            if (id == null)
             {
-                return View();
+                return NotFound();
             }
+                        
+            var produtoDomain = _produtoService.GetById((int)id);
+
+            if (produtoDomain == null)
+            {
+                return NotFound();
+            }
+
+            var produtoViewModel = EntityToViewModel(produtoDomain);
+            return View(produtoViewModel);
         }
     }
 }

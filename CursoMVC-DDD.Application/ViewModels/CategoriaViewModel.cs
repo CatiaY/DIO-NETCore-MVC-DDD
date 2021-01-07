@@ -1,5 +1,4 @@
-﻿using CursoMVC_DDD.Domain.ValueTypes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CursoMVC_DDD.Application.ViewModels
 {

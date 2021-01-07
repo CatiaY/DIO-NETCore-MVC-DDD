@@ -1,6 +1,7 @@
 using CursoMVC_DDD.Domain.ValueTypes;
 using Flunt.Notifications;
 using Flunt.Validations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CursoMVC_DDD.Domain.Entities
 {
@@ -15,6 +16,7 @@ namespace CursoMVC_DDD.Domain.Entities
         public decimal Valor { get; }
 
         public bool Disponivel { get; }
+
         
         public int CategoriaId { get; set; }
         public virtual Categoria Categoria { get; set; }
